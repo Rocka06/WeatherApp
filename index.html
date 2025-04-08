@@ -6,43 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tabbed UI with DaisyUI</title>
   <link rel="stylesheet" href="src/app.css">
-  <style>
-    @keyframes fade-slide-in {
-      0% {
-        opacity: 0;
-        transform: translateX(20px);
-      }
-
-      100% {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    @keyframes fade-slide-out {
-      0% {
-        opacity: 1;
-        transform: translateX(0);
-      }
-
-      100% {
-        opacity: 0;
-        transform: translateX(-20px);
-      }
-    }
-
-    .fade-slide-in {
-      animation: fade-slide-in 0.5s ease forwards;
-    }
-
-    .fade-slide-out {
-      animation: fade-slide-out 0.5s ease forwards;
-    }
-  </style>
 </head>
 
 <body class="bg-base-200 min-h-screen fade-slide-in">
-  <div class="navbar bg-base-100 shadow-sm">
+  <nav class="navbar bg-base-100 shadow-sm">
     <div class="navbar-start">
       <a href="/index.html" class="btn btn-ghost text-xl">Weather App</a>
     </div>
@@ -69,11 +36,47 @@
         </svg>
       </label>
     </div>
-  </div>
+  </nav>
 
-  <section id="home" class="fade-slide-in">Napi</section>
+  <section id="home" class="fade-slide-in">
+    <div class="overflow-x-auto pb-15 mt-4 container mx-auto">
+      <div class="flex space-x-4 ms-4" id="cardList">
+      </div>
+    </div>
+  </section>
+
   <section id="about" class="hidden">Havi</section>
   <section id="contact" class="hidden">Hírek</section>
+
+  <template id="DayCard">
+    <div class="card min-w-80 bg-base-100 shadow-xl p-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="card-title text-2xl" id="location">Budapest</h2>
+          <p class="text-sm text-gray-500" id="date">2025. ápr. 8., Hétfő</p>
+        </div>
+        <div class="text-5xl" id="icon">🌤️</div>
+      </div>
+      <div class="mt-4">
+        <p class="text-4xl font-bold" id="temperature">18°C</p>
+        <p class="text-sm text-gray-500" id="feelTemperature">Érzett hőmérséklet: 16°C</p>
+      </div>
+      <div class="mt-4 grid grid-cols-2 gap-2 text-sm">
+        <div class="flex items-center gap-1">
+          🌬️ <span id="windSpeed">Szél: 15 km/h</span>
+        </div>
+        <div class="flex items-center gap-1">
+          💧 <span id="humidity">Páratartalom: 65%</span>
+        </div>
+        <div class="flex items-center gap-1">
+          🌅 <span id="sunrise">Napkelte: 06:20</span>
+        </div>
+        <div class="flex items-center gap-1">
+          🌇 <span id="sunset">Napnyugta: 19:30</span>
+        </div>
+      </div>
+    </div>
+  </template>
 
   <script src="src/MainTabs.js"></script>
 </body>
