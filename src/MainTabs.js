@@ -27,6 +27,6 @@ tabs.forEach(tab => {
             newContent.classList.add('fade-slide-in');
             activeTab = tab.dataset.tab;
             isTransitioning = false;
-        }, 500);
+        }, 250);
     });
 });

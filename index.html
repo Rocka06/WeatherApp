@@ -2,83 +2,133 @@
 <html lang="hu" data-theme="light">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tabbed UI with DaisyUI</title>
-  <link rel="stylesheet" href="src/app.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Tabbed UI with DaisyUI</title>
+	<link rel="stylesheet" href="src/app.css">
 </head>
 
 <body class="bg-base-200 min-h-screen fade-slide-in">
-  <nav class="navbar bg-base-100 shadow-sm">
-    <div class="navbar-start">
-      <a href="/index.html" class="btn btn-ghost text-xl">Weather App</a>
-    </div>
-    <div class="navbar-center">
-      <button class="tab tab-active" data-tab="home">Napi</button>
-      <button class="tab" data-tab="about">Havi</button>
-      <button class="tab" data-tab="contact">Hírek</button>
-    </div>
-    <div class="navbar-end">
-      <label class="swap swap-rotate">
-        <!-- this hidden checkbox controls the state -->
-        <input type="checkbox" class="theme-controller" value="dark" />
+	<nav class="navbar bg-base-100 shadow-sm">
+		<div class="navbar-start">
+			<a href="/index.html" class="btn btn-ghost text-xl">Weather App</a>
+		</div>
+		<div class="navbar-center">
+			<button class="tab tab-active" data-tab="hourly">Napi</button>
+			<button class="tab" data-tab="daily">Havi</button>
+			<button class="tab" data-tab="news">Hírek</button>
+		</div>
+		<div class="navbar-end">
+			<label class="swap swap-rotate">
+				<!-- this hidden checkbox controls the state -->
+				<input type="checkbox" class="theme-controller" value="dark" />
 
-        <!-- sun icon -->
-        <svg class="swap-off h-10 w-10 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path
-            d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
-        </svg>
+				<!-- sun icon -->
+				<svg class="swap-off h-10 w-10 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+					<path
+						d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
+				</svg>
 
-        <!-- moon icon -->
-        <svg class="swap-on h-10 w-10 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path
-            d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" />
-        </svg>
-      </label>
-    </div>
-  </nav>
+				<!-- moon icon -->
+				<svg class="swap-on h-10 w-10 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+					<path
+						d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" />
+				</svg>
+			</label>
+		</div>
+	</nav>
 
-  <section id="home" class="fade-slide-in">
-    <div class="overflow-x-auto pb-15 mt-4 container mx-auto">
-      <div class="flex space-x-4 ms-4" id="cardList">
-      </div>
-    </div>
-  </section>
+	<section id="hourly" class="fade-slide-in">
+		<div class="overflow-x-auto pb-15 mt-4 container mx-auto">
+			<div class="flex space-x-4 ms-4" id="cardList">
+				<div class="card w-28 bg-base-100 shadow-md p-3 text-center">
+					<p class="text-sm text-gray-500 mb-1" id="time">13:00</p>
+					<div class="text-3xl mb-1" id="icon">🌤️</div>
+					<p class="text-xl font-semibold mb-1" id="temp">18°C</p>
+					<p class="text-xs text-gray-400">Hőérzet: <span id="feelTemperature">16°C</span></p>
+				</div>
+			</div>
+		</div>
+	</section>
 
-  <section id="about" class="hidden">Havi</section>
-  <section id="contact" class="hidden">Hírek</section>
+	<section id="daily" class="hidden">
+		<div class="overflow-x-auto pb-15 mt-4 container mx-auto">
+			<div class="flex space-x-4 ms-4" id="cardList">
+				<div class="card min-w-80 bg-base-100 shadow-xl p-4">
+					<div class="flex justify-between items-center">
+						<div>
+							<h2 class="card-title text-2xl" id="location">Budapest</h2>
+							<p class="text-sm text-gray-500" id="date">2025. ápr. 8., Hétfő</p>
+						</div>
+						<div class="text-5xl" id="icon">🌤️</div>
+					</div>
+					<div class="mt-4">
+						<p class="text-4xl font-bold" id="temperature">18°C</p>
+						<p class="text-sm text-gray-500">Hőérzet: <span id="feelTemperature">16°C</span></p>
+					</div>
+					<div class="mt-4 grid grid-cols-2 gap-2 text-sm">
+						<div class="flex items-center gap-1">
+							<p>🌬️ Szél: <span id="windSpeed">15 km/h</span></p>
+						</div>
+						<div class="flex items-center gap-1">
+							<p>💧 Páratartalom: <span id="humidity">65%</span></p>
+						</div>
+						<div class="flex items-center gap-1">
+							<p>🌅 Napkelte: <span id="sunrise">06:20</span></p>
+						</div>
+						<div class="flex items-center gap-1">
+							<p>🌇 Napnyugta: <span id="sunset">19:30</span></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-  <template id="DayCard">
-    <div class="card min-w-80 bg-base-100 shadow-xl p-4">
-      <div class="flex justify-between items-center">
-        <div>
-          <h2 class="card-title text-2xl" id="location">Budapest</h2>
-          <p class="text-sm text-gray-500" id="date">2025. ápr. 8., Hétfő</p>
-        </div>
-        <div class="text-5xl" id="icon">🌤️</div>
-      </div>
-      <div class="mt-4">
-        <p class="text-4xl font-bold" id="temperature">18°C</p>
-        <p class="text-sm text-gray-500" id="feelTemperature">Érzett hőmérséklet: 16°C</p>
-      </div>
-      <div class="mt-4 grid grid-cols-2 gap-2 text-sm">
-        <div class="flex items-center gap-1">
-          🌬️ <span id="windSpeed">Szél: 15 km/h</span>
-        </div>
-        <div class="flex items-center gap-1">
-          💧 <span id="humidity">Páratartalom: 65%</span>
-        </div>
-        <div class="flex items-center gap-1">
-          🌅 <span id="sunrise">Napkelte: 06:20</span>
-        </div>
-        <div class="flex items-center gap-1">
-          🌇 <span id="sunset">Napnyugta: 19:30</span>
-        </div>
-      </div>
-    </div>
-  </template>
+	<section id="news" class="hidden">
+		Hírek
+	</section>
 
-  <script src="src/MainTabs.js"></script>
+	<template id="DailyCard">
+		<div class="card min-w-80 bg-base-100 shadow-xl p-4">
+			<div class="flex justify-between items-center">
+				<div>
+					<h2 class="card-title text-2xl" id="location">Budapest</h2>
+					<p class="text-sm text-gray-500" id="date">2025. ápr. 8., Hétfő</p>
+				</div>
+				<div class="text-5xl" id="icon">🌤️</div>
+			</div>
+			<div class="mt-4">
+				<p class="text-4xl font-bold" id="temperature">18°C</p>
+				<p class="text-sm text-gray-500">Hőérzet: <span id="feelTemperature">16°C</span></p>
+			</div>
+			<div class="mt-4 grid grid-cols-2 gap-2 text-sm">
+				<div class="flex items-center gap-1">
+					<p>🌬️ Szél: <span id="windSpeed">15 km/h</span></p>
+				</div>
+				<div class="flex items-center gap-1">
+					<p>💧 Páratartalom: <span id="humidity">65%</span></p>
+				</div>
+				<div class="flex items-center gap-1">
+					<p>🌅 Napkelte: <span id="sunrise">06:20</span></p>
+				</div>
+				<div class="flex items-center gap-1">
+					<p>🌇 Napnyugta: <span id="sunset">19:30</span></p>
+				</div>
+			</div>
+		</div>
+	</template>
+
+	<template id="HourlyCard">
+		<div class="card w-28 bg-base-100 shadow-md p-3 text-center">
+			<p class="text-sm text-gray-500 mb-1" id="time">13:00</p>
+			<div class="text-3xl mb-1" id="icon">🌤️</div>
+			<p class="text-xl font-semibold mb-1" id="temp">18°C</p>
+			<p class="text-xs text-gray-400">Hőérzet: <span id="feelTemperature">16°C</span></p>
+		</div>
+	</template>
+
+	<script src="src/MainTabs.js"></script>
 </body>
 
 </html>

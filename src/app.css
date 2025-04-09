@@ -26,9 +26,11 @@
 }
 
 .fade-slide-in {
-    animation: fade-slide-in 0.5s ease forwards;
+    animation: fade-slide-in 0.25s ease-out forwards;
+    overflow-x: hidden;
 }
 
 .fade-slide-out {
-    animation: fade-slide-out 0.5s ease forwards;
+    animation: fade-slide-out 0.25s ease-out forwards;
+    overflow-x: hidden;
 }
