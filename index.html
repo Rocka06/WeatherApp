@@ -4,20 +4,41 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Tabbed UI with DaisyUI</title>
+	<title>WeatherApp</title>
 	<link rel="stylesheet" href="src/app.css">
 </head>
 
-<body class="bg-base-200 min-h-screen fade-slide-in">
+<body class="bg-base-200 min-h-screen flex flex-col fade-slide-in">
 	<nav class="navbar bg-base-100 shadow-sm">
 		<div class="navbar-start">
-			<a href="/index.html" class="btn btn-ghost text-xl">Weather App</a>
+			<div class="dropdown lg:hidden">
+				<label tabindex="0" class="btn btn-ghost lg:hidden">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+						stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+							d="M4 6h16M4 12h16M4 18h16" />
+					</svg>
+				</label>
+				<ul tabindex="0"
+					class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+					<li><button class="tab" data-tab="now">Most</button></li>
+					<li><button class="tab" data-tab="hourly">Óránként</button></li>
+					<li><button class="tab" data-tab="daily">Napi</button></li>
+					<li><button class="tab" data-tab="news">Hírek</button></li>
+				</ul>
+			</div>
+			<a href="#" class="btn btn-ghost text-xl">🌦️ WeatherApp</a>
 		</div>
-		<div class="navbar-center">
-			<button class="tab tab-active" data-tab="hourly">Napi</button>
-			<button class="tab" data-tab="daily">Havi</button>
-			<button class="tab" data-tab="news">Hírek</button>
+
+		<div class="navbar-center hidden lg:flex">
+			<div class="tabs">
+				<button class="tab tab-bordered tab-active" data-tab="now">Most</button>
+				<button class="tab tab-bordered" data-tab="hourly">Óránként</button>
+				<button class="tab tab-bordered" data-tab="daily">Napi</button>
+				<button class="tab tab-bordered" data-tab="news">Hírek</button>
+			</div>
 		</div>
+
 		<div class="navbar-end">
 			<label class="swap swap-rotate">
 				<!-- this hidden checkbox controls the state -->
@@ -38,56 +59,60 @@
 		</div>
 	</nav>
 
-	<section id="hourly" class="fade-slide-in">
-		<div class="overflow-x-auto pb-15 mt-4 container mx-auto">
-			<div class="flex space-x-4 ms-4" id="cardList">
-				<div class="card w-28 bg-base-100 shadow-md p-3 text-center">
-					<p class="text-sm text-gray-500 mb-1" id="time">13:00</p>
-					<div class="text-3xl mb-1" id="icon">🌤️</div>
-					<p class="text-xl font-semibold mb-1" id="temp">18°C</p>
-					<p class="text-xs text-gray-400">Hőérzet: <span id="feelTemperature">16°C</span></p>
+	<main class="container mx-auto p-6">
+
+		<div class="flex justify-center mb-4">
+			<input type="text" placeholder="Város keresése..." class="input input-bordered w-full max-w-xs" />
+		</div>
+
+		<section id="now">
+			<div class="card bg-base-100 shadow-xl p-6 text-center">
+				<h2 class="text-2xl font-bold" id="nowLocation">Budapest</h2>
+				<p class="text-sm text-gray-500" id="nowDate">2025. április 11., Csütörtök</p>
+				<div class="text-7xl mt-4" id="icon">⛅</div>
+				<p class="text-5xl font-bold mt-2" id="nowTemperature">19°C</p>
+				<p class="text-gray-400">Hőérzet: <span id="nowFeelTemperature">17°C</span></p>
+				<div class="grid grid-cols-2 gap-4 mt-6 text-sm">
+					<p>💨 Szél: <span id="nowWind">14 km/h</span></p>
+					<p>💧 Páratartalom: <span id="nowHumidity">60%</span></p>
+					<p>🌅 Napkelte: <span id="nowSunrise">06:10</span></p>
+					<p>🌇 Napnyugta: <span id="nowSunset">19:45</span></p>
 				</div>
 			</div>
-		</div>
-	</section>
+		</section>
 
-	<section id="daily" class="hidden">
-		<div class="overflow-x-auto pb-15 mt-4 container mx-auto">
-			<div class="flex space-x-4 ms-4" id="cardList">
-				<div class="card min-w-80 bg-base-100 shadow-xl p-4">
-					<div class="flex justify-between items-center">
-						<div>
-							<h2 class="card-title text-2xl" id="location">Budapest</h2>
-							<p class="text-sm text-gray-500" id="date">2025. ápr. 8., Hétfő</p>
-						</div>
-						<div class="text-5xl" id="icon">🌤️</div>
-					</div>
-					<div class="mt-4">
-						<p class="text-4xl font-bold" id="temperature">18°C</p>
-						<p class="text-sm text-gray-500">Hőérzet: <span id="feelTemperature">16°C</span></p>
-					</div>
-					<div class="mt-4 grid grid-cols-2 gap-2 text-sm">
-						<div class="flex items-center gap-1">
-							<p>🌬️ Szél: <span id="windSpeed">15 km/h</span></p>
-						</div>
-						<div class="flex items-center gap-1">
-							<p>💧 Páratartalom: <span id="humidity">65%</span></p>
-						</div>
-						<div class="flex items-center gap-1">
-							<p>🌅 Napkelte: <span id="sunrise">06:20</span></p>
-						</div>
-						<div class="flex items-center gap-1">
-							<p>🌇 Napnyugta: <span id="sunset">19:30</span></p>
-						</div>
-					</div>
-				</div>
+		<section id="hourly">
+			<h3 class="text-xl font-semibold mb-2">Óránkénti előrejelzés</h3>
+			<div class="flex overflow-x-auto gap-4 p-4" id="hourlyGrid">
+
 			</div>
-		</div>
-	</section>
+		</section>
 
-	<section id="news" class="hidden">
-		Hírek
-	</section>
+		<section id="daily">
+			<h3 class="text-xl font-semibold mb-2">Napi előrejelzés</h3>
+			<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" id="dailyGrid">
+
+			</div>
+		</section>
+
+		<section id="news">
+			<h3 class="text-xl font-semibold mb-2">Időjárás hírek</h3>
+			<div class="grid gap-4" id="newsGrid">
+
+			</div>
+		</section>
+
+	</main>
+
+	<template id="HourlyCard">
+		<div class="card w-28 bg-base-100 shadow-md p-3 text-center">
+			<p class="text-sm text-gray-500 mb-1" id="time">13:00</p>
+			<div class="text-3xl mb-1" id="icon">🌤️</div>
+			<p class="text-xl font-semibold mb-1" id="temp">18°C</p>
+			<p class="text-xs text-gray-400">Hőérzet: <span id="feelTemperature">16°C</span></p>
+			<p class="text-xs text-yellow-500 font-medium mt-1">UV: <span id="uv">5</span></p>
+		</div>
+	</template>
 
 	<template id="DailyCard">
 		<div class="card min-w-80 bg-base-100 shadow-xl p-4">
@@ -119,12 +144,10 @@
 		</div>
 	</template>
 
-	<template id="HourlyCard">
-		<div class="card w-28 bg-base-100 shadow-md p-3 text-center">
-			<p class="text-sm text-gray-500 mb-1" id="time">13:00</p>
-			<div class="text-3xl mb-1" id="icon">🌤️</div>
-			<p class="text-xl font-semibold mb-1" id="temp">18°C</p>
-			<p class="text-xs text-gray-400">Hőérzet: <span id="feelTemperature">16°C</span></p>
+	<template id="NewsCard">
+		<div class="card bg-base-100 shadow p-4">
+			<h4 class="font-bold" id="title">Erős szél várható a hétvégén</h4>
+			<p class="text-sm text-gray-500 mt-1" id="detail">A meteorológiai szolgálat figyelmeztetést adott ki...</p>
 		</div>
 	</template>
 
