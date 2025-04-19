@@ -25,4 +25,11 @@ class OpenMeteo {
         if (!res.ok) alert("Hibás lekérdezés!");
         return (await res.json());
     }
+
+    static async fetchSuggestions(query) {
+        let url = `https://geocoding-api.open-meteo.com/v1/search?name=${query}`;
+        let res = await fetch(url);
+        if (!res.ok) alert("Hibás lekérdezés!");
+        return (await res.json());
+    }
 }
