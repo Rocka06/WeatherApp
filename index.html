@@ -69,8 +69,8 @@
 			<div class="card bg-base-100 shadow-xl p-6 text-center">
 				<h2 class="text-2xl font-bold" id="nowLocation">Budapest</h2>
 				<p class="text-sm text-gray-500" id="nowDate">2025. április 11., Csütörtök</p>
-				<div class="text-7xl mt-4" id="icon">⛅</div>
-				<p class="text-5xl font-bold mt-2" id="nowTemperature">19°C</p>
+				<div class="text-7xl mt-4" id="nowIcon">⛅</div>
+				<p class="text-5xl font-bold mt-2" id="nowTemperature">18°C</p>
 				<p class="text-gray-400">Hőérzet: <span id="nowFeelTemperature">17°C</span></p>
 				<div class="grid grid-cols-2 gap-4 mt-6 text-sm">
 					<p>💨 Szél: <span id="nowWind">14 km/h</span></p>
@@ -152,6 +152,16 @@
 	</template>
 
 	<script src="src/MainTabs.js"></script>
+	<script src="src/OpenMeteo.js"></script>
+	<script src="src/UpdateData.js"></script>
+	<script>
+		let cityName = "Budapest";
+		let coords = [47.4984, 19.0404];
+		
+		window.addEventListener("DOMContentLoaded", () => {
+			updateCurrentCard(cityName, coords);
+		});
+	</script>
 </body>
 
 </html>
