@@ -44,7 +44,6 @@ const updateCurrentCard = async (cityName, coords) => {
     document.getElementById("nowDate").textContent = `${date.getFullYear()}. ${monthNames[date.getMonth()]} ${date.getDate()}., ${dayNames[date.getUTCDay()]}`;
 
     const data = await OpenMeteo.get_current(...coords);
-    console.log(data);
     document.getElementById("nowIcon").textContent = iconOfWMO(data.current.weather_code);
     document.getElementById("nowTemperature").textContent = data.current.temperature_2m.toString() + data.current_units.temperature_2m;
     document.getElementById("nowFeelTemperature").textContent = data.current.apparent_temperature.toString() + data.current_units.apparent_temperature;

@@ -201,7 +201,6 @@
 				const query = e.target.value;
 				if (query.length > 2) {
 					let suggestions = await OpenMeteo.fetchSuggestions(query);
-					console.log(suggestions);
 					document.getElementById("suggestionsList").innerHTML = "";
 					suggestions.results.forEach((suggestion) => {
 						const suggestionItem = document.getElementById("suggestionItem").content.cloneNode(true);
