@@ -34,3 +34,14 @@
     animation: fade-slide-out 0.25s ease-out forwards;
     overflow-x: hidden;
 }
+
+#suggestionsList {
+    position: relative;
+    display: table-column;
+    max-height: 100px;
+    min-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--tw-prose-pre-bg) transparent;
+}
