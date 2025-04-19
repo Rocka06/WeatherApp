@@ -42,7 +42,7 @@
 		<div class="navbar-end">
 			<label class="swap swap-rotate">
 				<!-- this hidden checkbox controls the state -->
-				<input type="checkbox" class="theme-controller" value="dark" />
+				<input type="checkbox" class="theme-controller" value="dark" onchange="localStorage.setItem('theme', this.checked)" />
 
 				<!-- sun icon -->
 				<svg class="swap-off h-10 w-10 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -187,6 +187,9 @@
 
 		window.addEventListener("DOMContentLoaded", () => {
 			updateCurrentCard(cityName, coords);
+			if (localStorage.getItem("theme") === "true") {
+				document.querySelector(".theme-controller").checked = true;
+			}
 			document.getElementById("searchbar").addEventListener("input", async (e) => {
 				const query = e.target.value;
 				if (query.length > 2) {
