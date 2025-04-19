@@ -69,7 +69,8 @@
 					<li class="suggestion-item" onclick="selectCity(event)">
 						<a href="#" class="flex items-center gap-2">
 							<span class="suggestion-name">Budapest</span>
-							<span class="suggestion-details">....</span>
+							<span class="suggestion-detail">....</span>
+							<span class="suggestion-country">HU</span>
 							<span class="suggestion-coords hidden">111.111 11.111</span>
 						</a>
 					</li>
@@ -172,7 +173,12 @@
 	<script>
 		let cityName = localStorage.getItem("cityName") || "Budapest";
 		let coords = localStorage.getItem("coords") ? localStorage.getItem("coords").split(",").map(Number) : [47.4979, 19.0402];
+		let countryCode = localStorage.getItem("countryCode") || "HU";
 		
+		localStorage.setItem("cityName", cityName);
+		localStorage.setItem("coords", coords.join(","));
+		localStorage.setItem("countryCode", countryCode);
+
 		function selectCity(event) {
 			const selectedCity = event.currentTarget.querySelector(".suggestion-name").textContent;
 			const coords = event.currentTarget.querySelector(".suggestion-coords").textContent.split(",").map(Number);
@@ -182,6 +188,7 @@
 			document.getElementById("suggestionsList").innerHTML = "";
 
 			localStorage.setItem("cityName", selectedCity);
+			localStorage.setItem("countryCode", event.currentTarget.querySelector(".suggestion-country").textContent);
 			localStorage.setItem("coords", coords.join(","));
 		}
 
@@ -199,7 +206,8 @@
 					suggestions.results.forEach((suggestion) => {
 						const suggestionItem = document.getElementById("suggestionItem").content.cloneNode(true);
 						suggestionItem.querySelector(".suggestion-name").textContent = `${suggestion.name}`;
-						suggestionItem.querySelector(".suggestion-details").textContent = ` ${suggestion.admin1 ? " " + suggestion.admin1 : ''} (${suggestion.country_code})`;
+						suggestionItem.querySelector(".suggestion-detail").textContent = ` ${suggestion.admin1 ? " " + suggestion.admin1 : ''}`;
+						suggestionItem.querySelector(".suggestion-country").textContent = suggestion.country_code;
 						suggestionItem.querySelector(".suggestion-coords").textContent = `${suggestion.latitude},${suggestion.longitude}`;
 						document.getElementById("suggestionsList").appendChild(suggestionItem);
 					});
