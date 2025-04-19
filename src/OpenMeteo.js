@@ -30,6 +30,12 @@ class OpenMeteo {
         let url = `https://geocoding-api.open-meteo.com/v1/search?name=${query}`;
         let res = await fetch(url);
         if (!res.ok) alert("Hibás lekérdezés!");
-        return (await res.json());
+        let json = await res.json();
+        if (!json.results) {
+            return {
+                results: []
+            };
+        }
+        return json;
     }
 }
