@@ -27,7 +27,7 @@
 					<li><button class="tab" data-tab="news">Hírek</button></li>
 				</ul>
 			</div>
-			<a href="#" class="btn btn-ghost text-xl">🌦️ WeatherApp</a>
+			<a href="index.html" class="btn btn-ghost text-xl hidden lg:flex">🌦️ WeatherApp</a>
 		</div>
 
 		<div class="navbar-center hidden lg:flex">
@@ -40,9 +40,14 @@
 		</div>
 
 		<div class="navbar-end">
+			<select id="metricSelect" class="select w-auto me-4">
+				<option value="c" selected>°C</option>
+				<option value="f">°F</option>
+			</select>
 			<label class="swap swap-rotate">
 				<!-- this hidden checkbox controls the state -->
-				<input type="checkbox" class="theme-controller" value="dark" onchange="localStorage.setItem('theme', this.checked)" />
+				<input type="checkbox" class="theme-controller" value="dark"
+					onchange="localStorage.setItem('theme', this.checked)" />
 
 				<!-- sun icon -->
 				<svg class="swap-off h-10 w-10 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -61,24 +66,22 @@
 
 	<main class="container mx-auto p-6">
 
-		<div class="flex justify-center mb-4" style="flex-direction: column; align-items: center;">
-			<input id="searchbar" type="text" placeholder="Város keresése..." class="input input-bordered w-full max-w-xs" />
-			<!-- Dropdown menu to display suggestions -->
-			<div class="dropdown-content w-full max-w-xs bg-base-100 shadow-lg mt-1 left-0"></div>
+		<div class="form-control w-full mx-auto mb-4 max-w-xs relative">
+			<input id="searchbar" type="text" placeholder="Város keresése..."
+				class="input input-bordered w-full max-w-xs" autocomplete="off" />
+
 				<template id="suggestionItem">
-					<li class="suggestion-item" onclick="selectCity(event)">
-						<a href="#" class="flex items-center gap-2">
+				<li class="px-4 py-2 cursor-pointer hover:bg-base-200" onclick="selectCity(event)">
 							<span class="suggestion-name">Budapest</span>
 							<span class="suggestion-details">....</span>
 							<span class="suggestion-coords hidden">111.111 11.111</span>
-						</a>
-					</li>
+				</li>
 				</template>
-				<ul class="menu p-2" id="suggestionsList">
 					
+			<ul id="suggestionsList"
+				class="absolute z-10 mt-1 w-full bg-base-100 shadow-lg rounded-box max-h-60 overflow-y-auto">
 				</ul>
 			</div>
-		</div>
 
 		<section id="now">
 			<div class="card bg-base-100 shadow-xl p-6 text-center">
