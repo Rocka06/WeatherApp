@@ -183,13 +183,12 @@
 			const selectedCity = event.currentTarget.querySelector(".suggestion-name").textContent;
 			const coords = event.currentTarget.querySelector(".suggestion-coords").textContent.split(",").map(Number);
 			cityName = selectedCity;
-			updateCurrentCard(selectedCity, coords);
-			document.getElementById("searchbar").value = '';
-			document.getElementById("suggestionsList").innerHTML = "";
-
 			localStorage.setItem("cityName", selectedCity);
 			localStorage.setItem("countryCode", event.currentTarget.querySelector(".suggestion-country").textContent);
 			localStorage.setItem("coords", coords.join(","));
+			updateCurrentCard(selectedCity, coords);
+			document.getElementById("searchbar").value = '';
+			document.getElementById("suggestionsList").innerHTML = "";
 		}
 
 		window.addEventListener("DOMContentLoaded", () => {
