@@ -27,7 +27,7 @@
 					<li><button class="tab" data-tab="news">Hírek</button></li>
 				</ul>
 			</div>
-			<a href="#" class="btn btn-ghost text-xl">🌦️ WeatherApp</a>
+			<a href="index.html" class="btn btn-ghost text-xl hidden lg:flex">🌦️ WeatherApp</a>
 		</div>
 
 		<div class="navbar-center hidden lg:flex">
@@ -40,9 +40,14 @@
 		</div>
 
 		<div class="navbar-end">
+			<select id="metricSelect" class="select w-auto me-4">
+				<option value="c" selected>°C</option>
+				<option value="f">°F</option>
+			</select>
 			<label class="swap swap-rotate">
 				<!-- this hidden checkbox controls the state -->
-				<input type="checkbox" class="theme-controller" value="dark" onchange="localStorage.setItem('theme', this.checked)" />
+				<input type="checkbox" class="theme-controller" value="dark"
+					onchange="localStorage.setItem('theme', this.checked)" />
 
 				<!-- sun icon -->
 				<svg class="swap-off h-10 w-10 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -61,24 +66,22 @@
 
 	<main class="container mx-auto p-6">
 
-		<div class="flex justify-center mb-4" style="flex-direction: column; align-items: center;">
-			<input id="searchbar" type="text" placeholder="Város keresése..." class="input input-bordered w-full max-w-xs" />
-			<!-- Dropdown menu to display suggestions -->
-			<div class="dropdown-content w-full max-w-xs bg-base-100 shadow-lg mt-1 left-0"></div>
-				<template id="suggestionItem">
-					<li class="suggestion-item" onclick="selectCity(event)">
-						<a href="#" class="flex items-center gap-2">
-							<span class="suggestion-name">Budapest</span>
-							<span class="suggestion-detail">....</span>
-							<span class="suggestion-country">HU</span>
-							<span class="suggestion-coords hidden">111.111 11.111</span>
-						</a>
-					</li>
-				</template>
-				<ul class="menu p-2" id="suggestionsList">
-					
-				</ul>
-			</div>
+		<div class="form-control w-full mx-auto mb-4 max-w-xs relative">
+			<input id="searchbar" type="text" placeholder="Város keresése..."
+				class="input input-bordered w-full max-w-xs" autocomplete="off" />
+
+			<template id="suggestionItem">
+				<li class="px-4 py-2 cursor-pointer hover:bg-base-200" onclick="selectCity(event)">
+					<span class="suggestion-name">Budapest</span>
+					<span class="suggestion-detail">....</span>
+					<span class="suggestion-country">HU</span>
+					<span class="suggestion-coords hidden">111.111 11.111</span>
+				</li>
+			</template>
+
+			<ul id="suggestionsList"
+				class="absolute z-10 mt-1 w-full bg-base-100 shadow-lg rounded-box max-h-60 overflow-y-auto">
+			</ul>
 		</div>
 
 		<section id="now">
@@ -174,7 +177,8 @@
 		let cityName = localStorage.getItem("cityName") || "Budapest";
 		let coords = localStorage.getItem("coords") ? localStorage.getItem("coords").split(",").map(Number) : [47.4979, 19.0402];
 		let countryCode = localStorage.getItem("countryCode") || "HU";
-		
+		let timer;
+
 		localStorage.setItem("cityName", cityName);
 		localStorage.setItem("coords", coords.join(","));
 		localStorage.setItem("countryCode", countryCode);
@@ -196,24 +200,27 @@
 			if (localStorage.getItem("theme") === "true") {
 				document.querySelector(".theme-controller").checked = true;
 			}
-			document.getElementById("searchbar").addEventListener("input", async (e) => {
-				const query = e.target.value;
-				if (query.length > 2) {
-					let suggestions = await OpenMeteo.fetchSuggestions(query);
-					document.getElementById("suggestionsList").innerHTML = "";
-					suggestions.results.forEach((suggestion) => {
-						const suggestionItem = document.getElementById("suggestionItem").content.cloneNode(true);
-						suggestionItem.querySelector(".suggestion-name").textContent = `${suggestion.name}`;
-						suggestionItem.querySelector(".suggestion-detail").textContent = ` ${suggestion.admin1 ? " " + suggestion.admin1 : ''}`;
-						suggestionItem.querySelector(".suggestion-country").textContent = suggestion.country_code;
-						suggestionItem.querySelector(".suggestion-coords").textContent = `${suggestion.latitude},${suggestion.longitude}`;
-						document.getElementById("suggestionsList").appendChild(suggestionItem);
-					});
-				} else if (query.length === 0) {
-					document.getElementById("suggestionsList").classList.add("hidden");
-				} else {
-					document.getElementById("suggestionsList").innerHTML = "";
-				}
+			document.getElementById("searchbar").addEventListener("input", (e) => {
+				clearTimeout(timer);
+				timer = setTimeout(async () => {
+					const query = e.target.value;
+					if (query.length > 2) {
+						let suggestions = await OpenMeteo.fetchSuggestions(query);
+						document.getElementById("suggestionsList").innerHTML = "";
+						suggestions.results.forEach((suggestion) => {
+							const suggestionItem = document.getElementById("suggestionItem").content.cloneNode(true);
+							suggestionItem.querySelector(".suggestion-name").textContent = `${suggestion.name}`;
+							suggestionItem.querySelector(".suggestion-detail").textContent = ` ${suggestion.admin1 ? " " + suggestion.admin1 : ''}`;
+							suggestionItem.querySelector(".suggestion-country").textContent = suggestion.country_code;
+							suggestionItem.querySelector(".suggestion-coords").textContent = `${suggestion.latitude},${suggestion.longitude}`;
+							document.getElementById("suggestionsList").appendChild(suggestionItem);
+						});
+					} else if (query.length === 0) {
+						document.getElementById("suggestionsList").classList.add("hidden");
+					} else {
+						document.getElementById("suggestionsList").innerHTML = "";
+					}
+				}, 500);
 			});
 		});
 	</script>
