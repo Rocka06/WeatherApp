@@ -73,7 +73,8 @@
 			<template id="suggestionItem">
 				<li class="px-4 py-2 cursor-pointer hover:bg-base-200" onclick="selectCity(event)">
 					<span class="suggestion-name">Budapest</span>
-					<span class="suggestion-details">....</span>
+					<span class="suggestion-detail">....</span>
+					<span class="suggestion-country">HU</span>
 					<span class="suggestion-coords hidden">111.111 11.111</span>
 				</li>
 			</template>
@@ -175,18 +176,23 @@
 	<script>
 		let cityName = localStorage.getItem("cityName") || "Budapest";
 		let coords = localStorage.getItem("coords") ? localStorage.getItem("coords").split(",").map(Number) : [47.4979, 19.0402];
+		let countryCode = localStorage.getItem("countryCode") || "HU";
 		let timer;
+
+		localStorage.setItem("cityName", cityName);
+		localStorage.setItem("coords", coords.join(","));
+		localStorage.setItem("countryCode", countryCode);
 
 		function selectCity(event) {
 			const selectedCity = event.currentTarget.querySelector(".suggestion-name").textContent;
 			const coords = event.currentTarget.querySelector(".suggestion-coords").textContent.split(",").map(Number);
 			cityName = selectedCity;
+			localStorage.setItem("cityName", selectedCity);
+			localStorage.setItem("countryCode", event.currentTarget.querySelector(".suggestion-country").textContent);
+			localStorage.setItem("coords", coords.join(","));
 			updateCurrentCard(selectedCity, coords);
 			document.getElementById("searchbar").value = '';
 			document.getElementById("suggestionsList").innerHTML = "";
-
-			localStorage.setItem("cityName", selectedCity);
-			localStorage.setItem("coords", coords.join(","));
 		}
 
 		window.addEventListener("DOMContentLoaded", () => {
@@ -195,17 +201,17 @@
 				document.querySelector(".theme-controller").checked = true;
 			}
 			document.getElementById("searchbar").addEventListener("input", (e) => {
-				clearTimeout(timer)
+				clearTimeout(timer);
 				timer = setTimeout(async () => {
 					const query = e.target.value;
 					if (query.length > 2) {
 						let suggestions = await OpenMeteo.fetchSuggestions(query);
-						console.log(suggestions);
 						document.getElementById("suggestionsList").innerHTML = "";
 						suggestions.results.forEach((suggestion) => {
 							const suggestionItem = document.getElementById("suggestionItem").content.cloneNode(true);
 							suggestionItem.querySelector(".suggestion-name").textContent = `${suggestion.name}`;
-							suggestionItem.querySelector(".suggestion-details").textContent = ` ${suggestion.admin1 ? " " + suggestion.admin1 : ''} (${suggestion.country_code})`;
+							suggestionItem.querySelector(".suggestion-detail").textContent = ` ${suggestion.admin1 ? " " + suggestion.admin1 : ''}`;
+							suggestionItem.querySelector(".suggestion-country").textContent = suggestion.country_code;
 							suggestionItem.querySelector(".suggestion-coords").textContent = `${suggestion.latitude},${suggestion.longitude}`;
 							document.getElementById("suggestionsList").appendChild(suggestionItem);
 						});
@@ -215,7 +221,6 @@
 						document.getElementById("suggestionsList").innerHTML = "";
 					}
 				}, 500);
-
 			});
 		});
 	</script>
