@@ -60,7 +60,6 @@ const updateHourlyCard = async (coords) => {
     const cardTemplate = document.getElementById("hourlycard");
     const hourlySection = document.getElementById("hourlyGrid");
     for (let timestamp in data) {
-        console.log(data[timestamp])
         let date = new Date(timestamp);
         let card = cardTemplate.cloneNode(true);
         card.id = "";
