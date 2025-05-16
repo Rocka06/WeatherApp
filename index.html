@@ -103,7 +103,7 @@
 		<section id="hourly">
 			<h3 class="text-xl font-semibold mb-2">Óránkénti előrejelzés</h3>
 			<div class="flex overflow-x-auto gap-4 p-4" id="hourlyGrid">
-
+				
 			</div>
 		</section>
 
@@ -123,15 +123,17 @@
 
 	</main>
 
-	<template id="HourlyCard">
-		<div class="card w-28 bg-base-100 shadow-md p-3 text-center">
-			<p class="text-sm text-gray-500 mb-1" id="time">13:00</p>
-			<div class="text-3xl mb-1" id="icon">🌤️</div>
-			<p class="text-xl font-semibold mb-1" id="temp">18°C</p>
-			<p class="text-xs text-gray-400">Hőérzet: <span id="feelTemperature">16°C</span></p>
-			<p class="text-xs text-yellow-500 font-medium mt-1">UV: <span id="uv">5</span></p>
-		</div>
-	</template>
+	<!-- <template> -->
+	<div class="card w-28 bg-base-100 shadow-md p-3 text-center hidden" id="hourlycard">
+		<p class="text-sm text-gray-500 mb-1 hourly-time">13:00</p>
+		<div class="text-3xl mb-1 hourly-icon">🌤️</div>
+		<p class="text-xl font-semibold mb-1 hourly-temp">18°C</p>
+		<p class="text-xs text-gray-400">Hőérzet: <span class="hourly-feel">16°C</span></p>
+		<p class="text-xs text-yellow-500 font-medium mt-1">☁️: <span class="hourly-cloud">10%</span></p>
+		<p class="text-xs text-blue-500 font-medium">💧: <span class="hourly-humidity">0%</span></p>
+
+	</div>
+	<!-- </template> -->
 
 	<template id="DailyCard">
 		<div class="card min-w-80 bg-base-100 shadow-xl p-4">
@@ -197,6 +199,7 @@
 
 		window.addEventListener("DOMContentLoaded", () => {
 			updateCurrentCard(cityName, coords);
+			updateHourlyCard(coords);
 			if (localStorage.getItem("theme") === "true") {
 				document.querySelector(".theme-controller").checked = true;
 			}

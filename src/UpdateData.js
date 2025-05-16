@@ -54,3 +54,23 @@ const updateCurrentCard = async (cityName, coords) => {
     document.getElementById("nowSunrise").textContent = `${sunrise.getHours()}:${sunrise.getMinutes()}`;
     document.getElementById("nowSunset").textContent = `${sunset.getHours()}:${sunset.getMinutes()}`;
 }
+
+const updateHourlyCard = async (coords) => {
+    const data = await OpenMeteo.get_hourly(...coords);
+    const cardTemplate = document.getElementById("hourlycard");
+    const hourlySection = document.getElementById("hourlyGrid");
+    for (let timestamp in data) {
+        let date = new Date(timestamp);
+        let card = cardTemplate.cloneNode(true);
+        card.id = "";
+        card.classList.remove("hidden");
+        card.querySelector(".hourly-time").textContent = `${date.getHours()}:00`;
+        card.querySelector(".hourly-icon").textContent = iconOfWMO(data[timestamp].weather_code);
+        card.querySelector(".hourly-temp").textContent = data[timestamp].temperature_2m.toString() + "°"; //+ data[timestamp].unit_temperature_2m;
+        card.querySelector(".hourly-feel").textContent = data[timestamp].apparent_temperature.toString() + "°"; //+ data[timestamp].unit_apparent_temperature;
+        card.querySelector(".hourly-cloud").textContent = data[timestamp].cloud_cover + "%";
+        card.querySelector(".hourly-humidity").textContent = data[timestamp].relative_humidity_2m + "%";
+
+        hourlySection.appendChild(card);
+    }
+}

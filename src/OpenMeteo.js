@@ -9,6 +9,14 @@ class OpenMeteo {
         "weather_code"
     ].join(',');
 
+    static VARS_HOURLY = [
+        "temperature_2m",
+        "weather_code",
+        "apparent_temperature",
+        "cloud_cover",
+        "relative_humidity_2m"
+    ].join(',');
+
     static VARS_DAILY = [
         "sunrise",
         "sunset"
@@ -24,6 +32,37 @@ class OpenMeteo {
         let res = await fetch(url);
         if (!res.ok) alert("Hibás lekérdezés!");
         return (await res.json());
+    }
+
+    static async get_hourly(lat, lon, forecastDays=3, pastDays=0) {
+        let url = this.API_URL + 
+            this.urlparams( {latitude: lat, longitude: lon, timezone: "GMT+2"} ) + `&hourly=${this.VARS_HOURLY}&forecast_days=${forecastDays}&past_days=${pastDays}`;
+        let res = await fetch(url);
+        if (!res.ok) alert("Hibás lekérdezés!");
+        
+        let json = await res.json();
+        let hourly = {};
+        for (let i = 0; i < json.hourly.time.length; i++) {
+            if (new Date(json.hourly.time[i]).getTime() < Date.now() - 3600000) {
+                continue;
+            }
+            hourly[json.hourly.time[i]] = {
+                temperature_2m: json.hourly.temperature_2m[i],
+                apparent_temperature: json.hourly.apparent_temperature[i],
+                weather_code: json.hourly.weather_code[i],
+                cloud_cover: json.hourly.cloud_cover[i],
+                relative_humidity_2m: json.hourly.relative_humidity_2m[i],
+                unit_temperature_2m: json.hourly_units.temperature_2m,
+                unit_apparent_temperature: json.hourly_units.apparent_temperature,
+            };
+        }
+
+        hourly = Object.keys(hourly).slice(0, 49).reduce((obj, key) => {
+            obj[key] = hourly[key];
+            return obj;
+        }, {});
+
+        return hourly;
     }
 
     static async fetchSuggestions(query) {
