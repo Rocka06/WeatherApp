@@ -124,7 +124,7 @@
 	</main>
 
 	<!-- <template> -->
-	<div class="card w-28 bg-base-100 shadow-md p-3 text-center hidden" id="hourlycard">
+	<div class="card min-w-28 bg-base-100 shadow-md p-3 text-center hidden" id="hourlycard">
 		<p class="text-sm text-gray-500 mb-1 hourly-time">13:00</p>
 		<div class="text-3xl mb-1 hourly-icon">🌤️</div>
 		<p class="text-xl font-semibold mb-1 hourly-temp">18°C</p>
@@ -193,6 +193,7 @@
 			localStorage.setItem("countryCode", event.currentTarget.querySelector(".suggestion-country").textContent);
 			localStorage.setItem("coords", coords.join(","));
 			updateCurrentCard(selectedCity, coords);
+			updateHourlyCard(coords);
 			document.getElementById("searchbar").value = '';
 			document.getElementById("suggestionsList").innerHTML = "";
 		}
@@ -223,7 +224,7 @@
 					} else {
 						document.getElementById("suggestionsList").innerHTML = "";
 					}
-				}, 500);
+				}, 250);
 			});
 		});
 	</script>

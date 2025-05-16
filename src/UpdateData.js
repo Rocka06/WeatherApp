@@ -2,7 +2,7 @@ const dayNames = ["Vasárnap", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Pé
 const monthNames = ["január", "február", "március", "április", "május", "június", "július", "augusztus", "szeptember", "október", "november", "december"]
 
 const iconOfWMO = (WMO) => {
-    switch(WMO) {
+    switch (WMO) {
         case 0: return "☀️"; // Clear sky
         case 1: return "🌤️"; // Mainly clear
         case 2: return "🌥️"; // Partly cloudy
@@ -59,6 +59,8 @@ const updateHourlyCard = async (coords) => {
     const data = await OpenMeteo.get_hourly(...coords);
     const cardTemplate = document.getElementById("hourlycard");
     const hourlySection = document.getElementById("hourlyGrid");
+    
+    hourlySection.innerHTML = "";
     for (let timestamp in data) {
         let date = new Date(timestamp);
         let card = cardTemplate.cloneNode(true);
