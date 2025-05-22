@@ -1,0 +1,25 @@
+{
+  "name": "vitest-data-formats",
+  "version": "1.0.0",
+  "description": "A project for testing data formats using Vitest.",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "jsdom": "^26.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.4"
+  },
+  "keywords": [
+    "vitest",
+    "data",
+    "formats",
+    "testing"
+  ],
+  "author": "",
+  "license": "ISC"
+}
