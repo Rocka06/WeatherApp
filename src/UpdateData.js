@@ -1,6 +1,8 @@
 const dayNames = ["Vasárnap", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"];
 const monthNames = ["január", "február", "március", "április", "május", "június", "július", "augusztus", "szeptember", "október", "november", "december"]
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
 const iconOfWMO = (WMO) => {
     switch (WMO) {
         case 0: return "☀️"; // Clear sky
@@ -39,7 +41,7 @@ const updateCurrentCard = async (cityName, coords) => {
         .split('')
         .map(char => String.fromCodePoint(127397 + char.charCodeAt(0)))
         .join('');
-    document.getElementById("nowLocation").textContent = cityName + " " + flagEmoji;
+    document.getElementById("location").textContent = cityName + " " + flagEmoji;
     let date = new Date();
     document.getElementById("nowDate").textContent = `${date.getFullYear()}. ${monthNames[date.getMonth()]} ${date.getDate()}., ${dayNames[date.getUTCDay()]}`;
 
@@ -59,7 +61,7 @@ const updateHourlyCard = async (coords) => {
     const data = await OpenMeteo.get_hourly(...coords);
     const cardTemplate = document.getElementById("hourlycard");
     const hourlySection = document.getElementById("hourlyGrid");
-    
+
     hourlySection.innerHTML = "";
     for (let timestamp in data) {
         let date = new Date(timestamp);
@@ -74,5 +76,6 @@ const updateHourlyCard = async (coords) => {
         card.querySelector(".hourly-humidity").textContent = data[timestamp].relative_humidity_2m + "%";
 
         hourlySection.appendChild(card);
+        await delay(30);
     }
 }
