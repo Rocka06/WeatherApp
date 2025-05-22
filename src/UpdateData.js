@@ -39,7 +39,7 @@ const updateCurrentCard = async (cityName, coords) => {
         .split('')
         .map(char => String.fromCodePoint(127397 + char.charCodeAt(0)))
         .join('');
-    document.getElementById("nowLocation").textContent = cityName + " " + flagEmoji;
+    document.getElementById("location").textContent = cityName + " " + flagEmoji;
     let date = new Date();
     document.getElementById("nowDate").textContent = `${date.getFullYear()}. ${monthNames[date.getMonth()]} ${date.getDate()}., ${dayNames[date.getUTCDay()]}`;
 
