@@ -1,7 +1,8 @@
-#Weater app
+# Weather app
 
-To run the project run the following command:
+To run the project use the following commands:
 
 ```
+npm install
 npm run dev
 ```
