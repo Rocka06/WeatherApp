@@ -219,8 +219,6 @@
 							suggestionItem.querySelector(".suggestion-coords").textContent = `${suggestion.latitude},${suggestion.longitude}`;
 							document.getElementById("suggestionsList").appendChild(suggestionItem);
 						});
-					} else if (query.length === 0) {
-						document.getElementById("suggestionsList").classList.add("hidden");
 					} else {
 						document.getElementById("suggestionsList").innerHTML = "";
 					}
