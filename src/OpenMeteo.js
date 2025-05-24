@@ -19,24 +19,33 @@ class OpenMeteo {
 
     static VARS_DAILY = [
         "sunrise",
-        "sunset"
+        "sunset",
+        "apparent_temperature_mean",
+        "temperature_2m_min",
+        "temperature_2m_max",
+        "temperature_2m_mean",
+        "weather_code",
+        "rain_sum",
+        "wind_speed_10m_mean"
     ].join(',');
 
     static urlparams(parameters) {
         return new URLSearchParams(parameters).toString();
     }
 
-    static async get_current(lat, lon) {
+    static async get_current(lat, lon, tempUnit="celsius") {
         let url = this.API_URL + 
-            this.urlparams( {latitude: lat, longitude: lon, timezone: "GMT+2"} ) + `&current=${this.VARS_CURRENT}&daily=${this.VARS_DAILY}`;
+            this.urlparams( {latitude: lat, longitude: lon, timezone: "GMT+2", temperature_unit: tempUnit} ) + `&current=${this.VARS_CURRENT}&daily=${this.VARS_DAILY}`;
         let res = await fetch(url);
         if (!res.ok) alert("Hibás lekérdezés!");
         return (await res.json());
     }
 
-    static async get_hourly(lat, lon, forecastDays=3, pastDays=0) {
+    static async get_hourly(lat, lon, tempUnit="celsius") {
+        const forecastDays = 3;
+        const pastDays = 0;
         let url = this.API_URL + 
-            this.urlparams( {latitude: lat, longitude: lon, timezone: "GMT+2"} ) + `&hourly=${this.VARS_HOURLY}&forecast_days=${forecastDays}&past_days=${pastDays}`;
+            this.urlparams( {latitude: lat, longitude: lon, timezone: "GMT+2", temperature_unit: tempUnit} ) + `&hourly=${this.VARS_HOURLY}&forecast_days=${forecastDays}&past_days=${pastDays}`;
         let res = await fetch(url);
         if (!res.ok) alert("Hibás lekérdezés!");
         
@@ -63,6 +72,15 @@ class OpenMeteo {
         }, {});
 
         return hourly;
+    }
+
+    static async get_daily(lat, lon, tempUnit="celsius") {
+        const forecastDays = 3;
+        let url = this.API_URL + 
+            this.urlparams( {latitude: lat, longitude: lon, timezone: "GMT+2", forecast_days: forecastDays, temperature_unit: tempUnit} ) + `&daily=${this.VARS_DAILY}`;
+        let res = await fetch(url);
+        if (!res.ok) alert("Hibás lekérdezés!");
+        return (await res.json());
     }
 
     static async fetchSuggestions(query) {

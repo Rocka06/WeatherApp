@@ -35,7 +35,7 @@ const iconOfWMO = (WMO) => {
     }
 }
 
-const updateCurrentCard = async (cityName, coords) => {
+const updateCurrentCard = async (cityName, coords, tempUnit="celsius") => {
     const flagEmoji = localStorage.getItem("countryCode")
         .toUpperCase()
         .split('')
@@ -45,7 +45,7 @@ const updateCurrentCard = async (cityName, coords) => {
     let date = new Date();
     document.getElementById("nowDate").textContent = `${date.getFullYear()}. ${monthNames[date.getMonth()]} ${date.getDate()}., ${dayNames[date.getUTCDay()]}`;
 
-    const data = await OpenMeteo.get_current(...coords);
+    const data = await OpenMeteo.get_current(...coords, tempUnit=tempUnit);
     document.getElementById("nowIcon").textContent = iconOfWMO(data.current.weather_code);
     document.getElementById("nowTemperature").textContent = data.current.temperature_2m.toString() + data.current_units.temperature_2m;
     document.getElementById("nowFeelTemperature").textContent = data.current.apparent_temperature.toString() + data.current_units.apparent_temperature;
@@ -57,8 +57,8 @@ const updateCurrentCard = async (cityName, coords) => {
     document.getElementById("nowSunset").textContent = `${sunset.getHours()}:${sunset.getMinutes()}`;
 }
 
-const updateHourlyCard = async (coords) => {
-    const data = await OpenMeteo.get_hourly(...coords);
+const updateHourlyCard = async (coords, tempUnit="celsius") => {
+    const data = await OpenMeteo.get_hourly(...coords, tempUnit=tempUnit);
     const cardTemplate = document.getElementById("hourlycard");
     const hourlySection = document.getElementById("hourlyGrid");
 
@@ -78,4 +78,47 @@ const updateHourlyCard = async (coords) => {
         hourlySection.appendChild(card);
         await delay(30);
     }
+}
+
+const updateDailyCard = async (cityName, coords, tempUnit="celsius") => {
+    const dailyGrid = document.getElementById("dailyGrid");
+    dailyGrid.innerHTML = "";
+    const cardTemplate = document.getElementById("DailyCard");
+    const data = await OpenMeteo.get_daily(...coords, tempUnit=tempUnit);
+
+    for (let i = 0; i < data.daily.time.length; i++) {
+        const card = cardTemplate.cloneNode(true);
+        card.id = "";
+        card.classList.remove("hidden");
+        let date = new Date(data.daily.time[i]);
+        card.querySelector(".dailyDate").textContent = `${date.getFullYear()}. ${monthNames[date.getMonth()]} ${date.getDate()}.`;
+        card.querySelector(".dailyIcon").textContent = iconOfWMO(data.daily.weather_code[i]);
+        card.querySelector(".dailyLocation").textContent = cityName;
+
+        for (let variable of OpenMeteo.VARS_DAILY.split(",")) {
+            let value = data.daily[variable][i];
+            const field = card.querySelector(`.dailyField[variable="${variable}"]`);
+            if (field) {
+                if (data.daily_units[variable].startsWith("iso")) {
+                    const dateObj = new Date(value);
+                    value = `${dateObj.getHours()}:${dateObj.getMinutes()}`;
+                }
+                field.textContent = value;
+            }
+            if (data.daily_units && data.daily_units[variable]) {
+                const unit = card.querySelectorAll(`.dailyFieldUnit[variable="${variable}"]`);
+                
+                for (let u of unit) {
+                    u.textContent = data.daily_units[variable];
+                }
+            }
+        }
+        dailyGrid.appendChild(card);
+    }
+}
+
+const updateAll = async (cityName, coords, tempUnit="celsius") => {
+    updateCurrentCard(cityName, coords, tempUnit);
+    updateDailyCard(cityName, coords, tempUnit);
+    updateHourlyCard(coords, tempUnit);
 }

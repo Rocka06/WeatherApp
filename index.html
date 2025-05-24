@@ -41,12 +41,12 @@
 
 		<div class="navbar-end">
 
-			<!--
+			
 			<select id="metricSelect" class="select w-auto me-4">
-				<option value="c" selected>°C</option>
-				<option value="f">°F</option>
+				<option value="celsius" selected>°C</option>
+				<option value="fahrenheit">°F</option>
 			</select>
-			-->
+			
 			<label class="swap swap-rotate">
 				<!-- this hidden checkbox controls the state -->
 				<input type="checkbox" class="theme-controller" value="dark"
@@ -118,9 +118,9 @@
 		</section>
 
 		<section id="news">
-			<h3 class="text-xl font-semibold mb-2">Időjárás hírek</h3>
+			<h3 class="text-xl font-semibold mb-2">Időjárás hírek (Magyarország)</h3>
 			<div class="grid gap-4" id="newsGrid">
-
+				<iframe src="https://m.met.hu/napijelentes" style="width: 100%; aspect-ratio: 16/9; pointer-events: none;" tabindex="-1"></iframe>
 			</div>
 		</section>
 
@@ -138,35 +138,36 @@
 	</div>
 	<!-- </template> -->
 
-	<template id="DailyCard">
-		<div class="card min-w-80 bg-base-100 shadow-xl p-4">
-			<div class="flex justify-between items-center">
-				<div>
-					<h2 class="card-title text-2xl" id="location">Budapest</h2>
-					<p class="text-sm text-gray-500" id="date">2025. ápr. 8., Hétfő</p>
-				</div>
-				<div class="text-5xl" id="icon">🌤️</div>
+	<!-- <template> -->
+	<div class="card min-w-80 bg-base-100 shadow-xl p-4 hidden" id="DailyCard">
+		<div class="flex justify-between items-center">
+			<div>
+				<h2 class="card-title text-2xl dailyLocation">Budapest</h2>
+				<p class="text-sm text-gray-500 dailyDate">2025. ápr. 8., Hétfő</p>
 			</div>
-			<div class="mt-4">
-				<p class="text-4xl font-bold" id="temperature">18°C</p>
-				<p class="text-sm text-gray-500">Hőérzet: <span id="feelTemperature">16°C</span></p>
+			<div class="text-5xl dailyIcon">🌤️</div>
+		</div>
+		<div class="mt-4">
+			<p class="text-4xl font-bold" class="dailyField" variable="temperature_2m_mean">18<span class="dailyFieldUnit" variable="temperature_2m_mean"></span></p>
+			<p class="text-sm text-gray-500">Hőérzet: <span class="dailyField" variable="apparent_temperature_mean">16</span><span class="dailyFieldUnit" variable="apparent_temperature_mean"></span></p>
+		</div>
+		<div class="mt-4 grid grid-cols-2 gap-2 text-sm">
+			<div class="flex items-center gap-1">
+				<p>🌬️ Szél: <span class="dailyField" variable="wind_speed_10m_mean">15</span> <span class="dailyFieldUnit" variable="wind_speed_10m_mean"></span></p>
 			</div>
-			<div class="mt-4 grid grid-cols-2 gap-2 text-sm">
-				<div class="flex items-center gap-1">
-					<p>🌬️ Szél: <span id="windSpeed">15 km/h</span></p>
-				</div>
-				<div class="flex items-center gap-1">
-					<p>💧 Páratartalom: <span id="humidity">65%</span></p>
-				</div>
-				<div class="flex items-center gap-1">
-					<p>🌅 Napkelte: <span id="sunrise">06:20</span></p>
-				</div>
-				<div class="flex items-center gap-1">
-					<p>🌇 Napnyugta: <span id="sunset">19:30</span></p>
-				</div>
+			<div class="flex items-center gap-1">
+				<p>💧 Eső: <span class="dailyField" variable="rain_sum">65</span> <span class="dailyFieldUnit" variable="rain_sum"></span></p>
+			</div>
+			<div class="flex items-center gap-1">
+				<p>🌅 Napkelte: <span class="dailyField" variable="sunrise">06:20</span></p>
+			</div>
+			<div class="flex items-center gap-1">
+				<p>🌇 Napnyugta: <span class="dailyField" variable="sunset">19:30</span></p>
 			</div>
 		</div>
-	</template>
+	</div>
+	<!-- </template> -->
+
 
 	<template id="NewsCard">
 		<div class="card bg-base-100 shadow p-4">
@@ -182,11 +183,13 @@
 		let cityName = localStorage.getItem("cityName") || "Budapest";
 		let coords = localStorage.getItem("coords") ? localStorage.getItem("coords").split(",").map(Number) : [47.4979, 19.0402];
 		let countryCode = localStorage.getItem("countryCode") || "HU";
+		let temperatureUnit = localStorage.getItem("temperatureUnit") || "celsius";
 		let timer;
 
 		localStorage.setItem("cityName", cityName);
 		localStorage.setItem("coords", coords.join(","));
 		localStorage.setItem("countryCode", countryCode);
+		localStorage.setItem("temperatureUnit", temperatureUnit);
 
 		function selectCity(event) {
 			const selectedCity = event.currentTarget.querySelector(".suggestion-name").textContent;
@@ -195,15 +198,13 @@
 			localStorage.setItem("cityName", selectedCity);
 			localStorage.setItem("countryCode", event.currentTarget.querySelector(".suggestion-country").textContent);
 			localStorage.setItem("coords", coords.join(","));
-			updateCurrentCard(selectedCity, coords);
-			updateHourlyCard(coords);
+			updateAll(selectedCity, coords, localStorage.getItem("temperatureUnit"));
 			document.getElementById("searchbar").value = '';
 			document.getElementById("suggestionsList").innerHTML = "";
 		}
 
 		window.addEventListener("DOMContentLoaded", () => {
-			updateCurrentCard(cityName, coords);
-			updateHourlyCard(coords);
+			updateAll(cityName, coords, localStorage.getItem("temperatureUnit"));
 			if (localStorage.getItem("theme") === "true") {
 				document.querySelector(".theme-controller").checked = true;
 			}
@@ -226,6 +227,13 @@
 						document.getElementById("suggestionsList").innerHTML = "";
 					}
 				}, 250);
+			});
+
+			document.getElementById("metricSelect").value = localStorage.getItem("temperatureUnit");
+
+			document.getElementById("metricSelect").addEventListener("change", e=>{
+				localStorage.setItem("temperatureUnit", e.target.value);
+				updateAll(cityName, coords, localStorage.getItem("temperatureUnit"));
 			});
 		});
 	</script>
