@@ -40,10 +40,13 @@
 		</div>
 
 		<div class="navbar-end">
+
+			<!--
 			<select id="metricSelect" class="select w-auto me-4">
 				<option value="c" selected>°C</option>
 				<option value="f">°F</option>
 			</select>
+			-->
 			<label class="swap swap-rotate">
 				<!-- this hidden checkbox controls the state -->
 				<input type="checkbox" class="theme-controller" value="dark"
@@ -64,8 +67,9 @@
 		</div>
 	</nav>
 
-	<main class="container mx-auto p-6">
+	<main class="container mx-auto">
 
+		<h2 class="text-4xl font-bold text-center my-4" id="location">Budapest</h2>
 		<div class="form-control w-full mx-auto mb-4 max-w-xs relative">
 			<input id="searchbar" type="text" placeholder="Város keresése..."
 				class="input input-bordered w-full max-w-xs" autocomplete="off" />
@@ -85,12 +89,11 @@
 		</div>
 
 		<section id="now">
-			<div class="card bg-base-100 shadow-xl p-6 text-center">
-				<h2 class="text-2xl font-bold" id="nowLocation">Budapest</h2>
-				<p class="text-sm text-gray-500" id="nowDate">2025. április 11., Csütörtök</p>
-				<div class="text-7xl mt-4" id="nowIcon">⛅</div>
+			<div class="card bg-base-100 shadow-xl pt-2 pb-6 mx-4 text-center">
+				<div class="text-7xl" id="nowIcon">⛅</div>
 				<p class="text-5xl font-bold mt-2" id="nowTemperature">18°C</p>
 				<p class="text-gray-400">Hőérzet: <span id="nowFeelTemperature">17°C</span></p>
+				<p class="text-gray-500" id="nowDate">2025. április 11., Csütörtök</p>
 				<div class="grid grid-cols-2 gap-4 mt-6 text-sm">
 					<p>💨 Szél: <span id="nowWind">14 km/h</span></p>
 					<p>💧 Páratartalom: <span id="nowHumidity">60%</span></p>
@@ -101,9 +104,9 @@
 		</section>
 
 		<section id="hourly">
-			<h3 class="text-xl font-semibold mb-2">Óránkénti előrejelzés</h3>
+			<h3 class="text-xl font-semibold mx-4 mb-2">Óránkénti előrejelzés</h3>
 			<div class="flex overflow-x-auto gap-4 p-4" id="hourlyGrid">
-				
+
 			</div>
 		</section>
 
@@ -124,7 +127,7 @@
 	</main>
 
 	<!-- <template> -->
-	<div class="card w-28 bg-base-100 shadow-md p-3 text-center hidden" id="hourlycard">
+	<div class="card min-w-28 bg-base-100 shadow-md p-3 text-center fade-slide-in hidden" id="hourlycard">
 		<p class="text-sm text-gray-500 mb-1 hourly-time">13:00</p>
 		<div class="text-3xl mb-1 hourly-icon">🌤️</div>
 		<p class="text-xl font-semibold mb-1 hourly-temp">18°C</p>
@@ -193,6 +196,7 @@
 			localStorage.setItem("countryCode", event.currentTarget.querySelector(".suggestion-country").textContent);
 			localStorage.setItem("coords", coords.join(","));
 			updateCurrentCard(selectedCity, coords);
+			updateHourlyCard(coords);
 			document.getElementById("searchbar").value = '';
 			document.getElementById("suggestionsList").innerHTML = "";
 		}
@@ -218,12 +222,10 @@
 							suggestionItem.querySelector(".suggestion-coords").textContent = `${suggestion.latitude},${suggestion.longitude}`;
 							document.getElementById("suggestionsList").appendChild(suggestionItem);
 						});
-					} else if (query.length === 0) {
-						document.getElementById("suggestionsList").classList.add("hidden");
 					} else {
 						document.getElementById("suggestionsList").innerHTML = "";
 					}
-				}, 500);
+				}, 250);
 			});
 		});
 	</script>
