@@ -41,12 +41,12 @@
 
 		<div class="navbar-end">
 
-			<!--
+			
 			<select id="metricSelect" class="select w-auto me-4">
-				<option value="c" selected>°C</option>
-				<option value="f">°F</option>
+				<option value="celsius" selected>°C</option>
+				<option value="fahrenheit">°F</option>
 			</select>
-			-->
+			
 			<label class="swap swap-rotate">
 				<!-- this hidden checkbox controls the state -->
 				<input type="checkbox" class="theme-controller" value="dark"
@@ -183,11 +183,13 @@
 		let cityName = localStorage.getItem("cityName") || "Budapest";
 		let coords = localStorage.getItem("coords") ? localStorage.getItem("coords").split(",").map(Number) : [47.4979, 19.0402];
 		let countryCode = localStorage.getItem("countryCode") || "HU";
+		let temperatureUnit = localStorage.getItem("temperatureUnit") || "celsius";
 		let timer;
 
 		localStorage.setItem("cityName", cityName);
 		localStorage.setItem("coords", coords.join(","));
 		localStorage.setItem("countryCode", countryCode);
+		localStorage.setItem("temperatureUnit", temperatureUnit);
 
 		function selectCity(event) {
 			const selectedCity = event.currentTarget.querySelector(".suggestion-name").textContent;
@@ -196,17 +198,13 @@
 			localStorage.setItem("cityName", selectedCity);
 			localStorage.setItem("countryCode", event.currentTarget.querySelector(".suggestion-country").textContent);
 			localStorage.setItem("coords", coords.join(","));
-			updateCurrentCard(selectedCity, coords);
-			updateHourlyCard(coords);
-			updateDailyCard(selectedCity, coords);
+			updateAll(selectedCity, coords, localStorage.getItem("temperatureUnit"));
 			document.getElementById("searchbar").value = '';
 			document.getElementById("suggestionsList").innerHTML = "";
 		}
 
 		window.addEventListener("DOMContentLoaded", () => {
-			updateCurrentCard(cityName, coords);
-			updateHourlyCard(coords);
-			updateDailyCard(cityName, coords);
+			updateAll(cityName, coords, localStorage.getItem("temperatureUnit"));
 			if (localStorage.getItem("theme") === "true") {
 				document.querySelector(".theme-controller").checked = true;
 			}
@@ -229,6 +227,13 @@
 						document.getElementById("suggestionsList").innerHTML = "";
 					}
 				}, 250);
+			});
+
+			document.getElementById("metricSelect").value = localStorage.getItem("temperatureUnit");
+
+			document.getElementById("metricSelect").addEventListener("change", e=>{
+				localStorage.setItem("temperatureUnit", e.target.value);
+				updateAll(cityName, coords, localStorage.getItem("temperatureUnit"));
 			});
 		});
 	</script>

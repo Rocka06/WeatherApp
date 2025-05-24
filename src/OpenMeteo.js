@@ -41,7 +41,9 @@ class OpenMeteo {
         return (await res.json());
     }
 
-    static async get_hourly(lat, lon, forecastDays=3, pastDays=0, tempUnit="celsius") {
+    static async get_hourly(lat, lon, tempUnit="celsius") {
+        const forecastDays = 3;
+        const pastDays = 0;
         let url = this.API_URL + 
             this.urlparams( {latitude: lat, longitude: lon, timezone: "GMT+2", temperature_unit: tempUnit} ) + `&hourly=${this.VARS_HOURLY}&forecast_days=${forecastDays}&past_days=${pastDays}`;
         let res = await fetch(url);
@@ -72,7 +74,8 @@ class OpenMeteo {
         return hourly;
     }
 
-    static async get_daily(lat, lon, forecastDays=3, tempUnit="celsius") {
+    static async get_daily(lat, lon, tempUnit="celsius") {
+        const forecastDays = 3;
         let url = this.API_URL + 
             this.urlparams( {latitude: lat, longitude: lon, timezone: "GMT+2", forecast_days: forecastDays, temperature_unit: tempUnit} ) + `&daily=${this.VARS_DAILY}`;
         let res = await fetch(url);
