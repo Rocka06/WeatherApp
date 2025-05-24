@@ -33,17 +33,17 @@ class OpenMeteo {
         return new URLSearchParams(parameters).toString();
     }
 
-    static async get_current(lat, lon) {
+    static async get_current(lat, lon, tempUnit="celsius") {
         let url = this.API_URL + 
-            this.urlparams( {latitude: lat, longitude: lon, timezone: "GMT+2"} ) + `&current=${this.VARS_CURRENT}&daily=${this.VARS_DAILY}`;
+            this.urlparams( {latitude: lat, longitude: lon, timezone: "GMT+2", temperature_unit: tempUnit} ) + `&current=${this.VARS_CURRENT}&daily=${this.VARS_DAILY}`;
         let res = await fetch(url);
         if (!res.ok) alert("Hibás lekérdezés!");
         return (await res.json());
     }
 
-    static async get_hourly(lat, lon, forecastDays=3, pastDays=0) {
+    static async get_hourly(lat, lon, forecastDays=3, pastDays=0, tempUnit="celsius") {
         let url = this.API_URL + 
-            this.urlparams( {latitude: lat, longitude: lon, timezone: "GMT+2"} ) + `&hourly=${this.VARS_HOURLY}&forecast_days=${forecastDays}&past_days=${pastDays}`;
+            this.urlparams( {latitude: lat, longitude: lon, timezone: "GMT+2", temperature_unit: tempUnit} ) + `&hourly=${this.VARS_HOURLY}&forecast_days=${forecastDays}&past_days=${pastDays}`;
         let res = await fetch(url);
         if (!res.ok) alert("Hibás lekérdezés!");
         
@@ -72,9 +72,9 @@ class OpenMeteo {
         return hourly;
     }
 
-    static async get_daily(lat, lon, forecastDays=3) {
+    static async get_daily(lat, lon, forecastDays=3, tempUnit="celsius") {
         let url = this.API_URL + 
-            this.urlparams( {latitude: lat, longitude: lon, timezone: "GMT+2", forecast_days: forecastDays} ) + `&daily=${this.VARS_DAILY}`;
+            this.urlparams( {latitude: lat, longitude: lon, timezone: "GMT+2", forecast_days: forecastDays, temperature_unit: tempUnit} ) + `&daily=${this.VARS_DAILY}`;
         let res = await fetch(url);
         if (!res.ok) alert("Hibás lekérdezés!");
         return (await res.json());

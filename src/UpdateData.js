@@ -35,7 +35,7 @@ const iconOfWMO = (WMO) => {
     }
 }
 
-const updateCurrentCard = async (cityName, coords) => {
+const updateCurrentCard = async (cityName, coords, tempUnit="celsius") => {
     const flagEmoji = localStorage.getItem("countryCode")
         .toUpperCase()
         .split('')
@@ -45,7 +45,7 @@ const updateCurrentCard = async (cityName, coords) => {
     let date = new Date();
     document.getElementById("nowDate").textContent = `${date.getFullYear()}. ${monthNames[date.getMonth()]} ${date.getDate()}., ${dayNames[date.getUTCDay()]}`;
 
-    const data = await OpenMeteo.get_current(...coords);
+    const data = await OpenMeteo.get_current(...coords, tempUnit=tempUnit);
     document.getElementById("nowIcon").textContent = iconOfWMO(data.current.weather_code);
     document.getElementById("nowTemperature").textContent = data.current.temperature_2m.toString() + data.current_units.temperature_2m;
     document.getElementById("nowFeelTemperature").textContent = data.current.apparent_temperature.toString() + data.current_units.apparent_temperature;
@@ -57,8 +57,8 @@ const updateCurrentCard = async (cityName, coords) => {
     document.getElementById("nowSunset").textContent = `${sunset.getHours()}:${sunset.getMinutes()}`;
 }
 
-const updateHourlyCard = async (coords) => {
-    const data = await OpenMeteo.get_hourly(...coords);
+const updateHourlyCard = async (coords, tempUnit="celsius") => {
+    const data = await OpenMeteo.get_hourly(...coords, tempUnit=tempUnit);
     const cardTemplate = document.getElementById("hourlycard");
     const hourlySection = document.getElementById("hourlyGrid");
 
@@ -80,11 +80,11 @@ const updateHourlyCard = async (coords) => {
     }
 }
 
-const updateDailyCard = async (cityName, coords) => {
+const updateDailyCard = async (cityName, coords, tempUnit="celsius") => {
     const dailyGrid = document.getElementById("dailyGrid");
     dailyGrid.innerHTML = "";
     const cardTemplate = document.getElementById("DailyCard");
-    const data = await OpenMeteo.get_daily(...coords);
+    const data = await OpenMeteo.get_daily(...coords, tempUnit=tempUnit);
 
     for (let i = 0; i < data.daily.time.length; i++) {
         const card = cardTemplate.cloneNode(true);
@@ -115,4 +115,10 @@ const updateDailyCard = async (cityName, coords) => {
         }
         dailyGrid.appendChild(card);
     }
+}
+
+const updateAll = async (cityName, coords, tempUnit="celsius") => {
+    updateCurrentCard(cityName, coords, tempUnit);
+    updateDailyCard(cityName, coords, tempUnit);
+    updateHourlyCard(coords, tempUnit);
 }
