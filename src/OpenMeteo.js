@@ -19,7 +19,14 @@ class OpenMeteo {
 
     static VARS_DAILY = [
         "sunrise",
-        "sunset"
+        "sunset",
+        "apparent_temperature_mean",
+        "temperature_2m_min",
+        "temperature_2m_max",
+        "temperature_2m_mean",
+        "weather_code",
+        "rain_sum",
+        "wind_speed_10m_mean"
     ].join(',');
 
     static urlparams(parameters) {
@@ -63,6 +70,14 @@ class OpenMeteo {
         }, {});
 
         return hourly;
+    }
+
+    static async get_daily(lat, lon, forecastDays=3) {
+        let url = this.API_URL + 
+            this.urlparams( {latitude: lat, longitude: lon, timezone: "GMT+2", forecast_days: forecastDays} ) + `&daily=${this.VARS_DAILY}`;
+        let res = await fetch(url);
+        if (!res.ok) alert("Hibás lekérdezés!");
+        return (await res.json());
     }
 
     static async fetchSuggestions(query) {

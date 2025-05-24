@@ -79,3 +79,40 @@ const updateHourlyCard = async (coords) => {
         await delay(30);
     }
 }
+
+const updateDailyCard = async (cityName, coords) => {
+    const dailyGrid = document.getElementById("dailyGrid");
+    dailyGrid.innerHTML = "";
+    const cardTemplate = document.getElementById("DailyCard");
+    const data = await OpenMeteo.get_daily(...coords);
+
+    for (let i = 0; i < data.daily.time.length; i++) {
+        const card = cardTemplate.cloneNode(true);
+        card.id = "";
+        card.classList.remove("hidden");
+        let date = new Date(data.daily.time[i]);
+        card.querySelector(".dailyDate").textContent = `${date.getFullYear()}. ${monthNames[date.getMonth()]} ${date.getDate()}.`;
+        card.querySelector(".dailyIcon").textContent = iconOfWMO(data.daily.weather_code[i]);
+        card.querySelector(".dailyLocation").textContent = cityName;
+
+        for (let variable of OpenMeteo.VARS_DAILY.split(",")) {
+            let value = data.daily[variable][i];
+            const field = card.querySelector(`.dailyField[variable="${variable}"]`);
+            if (field) {
+                if (data.daily_units[variable].startsWith("iso")) {
+                    const dateObj = new Date(value);
+                    value = `${dateObj.getHours()}:${dateObj.getMinutes()}`;
+                }
+                field.textContent = value;
+            }
+            if (data.daily_units && data.daily_units[variable]) {
+                const unit = card.querySelectorAll(`.dailyFieldUnit[variable="${variable}"]`);
+                
+                for (let u of unit) {
+                    u.textContent = data.daily_units[variable];
+                }
+            }
+        }
+        dailyGrid.appendChild(card);
+    }
+}

@@ -138,35 +138,36 @@
 	</div>
 	<!-- </template> -->
 
-	<template id="DailyCard">
-		<div class="card min-w-80 bg-base-100 shadow-xl p-4">
-			<div class="flex justify-between items-center">
-				<div>
-					<h2 class="card-title text-2xl" id="location">Budapest</h2>
-					<p class="text-sm text-gray-500" id="date">2025. ápr. 8., Hétfő</p>
-				</div>
-				<div class="text-5xl" id="icon">🌤️</div>
+	<!-- <template> -->
+	<div class="card min-w-80 bg-base-100 shadow-xl p-4 hidden" id="DailyCard">
+		<div class="flex justify-between items-center">
+			<div>
+				<h2 class="card-title text-2xl dailyLocation">Budapest</h2>
+				<p class="text-sm text-gray-500 dailyDate">2025. ápr. 8., Hétfő</p>
 			</div>
-			<div class="mt-4">
-				<p class="text-4xl font-bold" id="temperature">18°C</p>
-				<p class="text-sm text-gray-500">Hőérzet: <span id="feelTemperature">16°C</span></p>
+			<div class="text-5xl dailyIcon">🌤️</div>
+		</div>
+		<div class="mt-4">
+			<p class="text-4xl font-bold" class="dailyField" variable="temperature_2m_mean">18<span class="dailyFieldUnit" variable="temperature_2m_mean"></span></p>
+			<p class="text-sm text-gray-500">Hőérzet: <span class="dailyField" variable="apparent_temperature_mean">16</span><span class="dailyFieldUnit" variable="apparent_temperature_mean"></span></p>
+		</div>
+		<div class="mt-4 grid grid-cols-2 gap-2 text-sm">
+			<div class="flex items-center gap-1">
+				<p>🌬️ Szél: <span class="dailyField" variable="wind_speed_10m_mean">15</span> <span class="dailyFieldUnit" variable="wind_speed_10m_mean"></span></p>
 			</div>
-			<div class="mt-4 grid grid-cols-2 gap-2 text-sm">
-				<div class="flex items-center gap-1">
-					<p>🌬️ Szél: <span id="windSpeed">15 km/h</span></p>
-				</div>
-				<div class="flex items-center gap-1">
-					<p>💧 Páratartalom: <span id="humidity">65%</span></p>
-				</div>
-				<div class="flex items-center gap-1">
-					<p>🌅 Napkelte: <span id="sunrise">06:20</span></p>
-				</div>
-				<div class="flex items-center gap-1">
-					<p>🌇 Napnyugta: <span id="sunset">19:30</span></p>
-				</div>
+			<div class="flex items-center gap-1">
+				<p>💧 Eső: <span class="dailyField" variable="rain_sum">65</span> <span class="dailyFieldUnit" variable="rain_sum"></span></p>
+			</div>
+			<div class="flex items-center gap-1">
+				<p>🌅 Napkelte: <span class="dailyField" variable="sunrise">06:20</span></p>
+			</div>
+			<div class="flex items-center gap-1">
+				<p>🌇 Napnyugta: <span class="dailyField" variable="sunset">19:30</span></p>
 			</div>
 		</div>
-	</template>
+	</div>
+	<!-- </template> -->
+
 
 	<template id="NewsCard">
 		<div class="card bg-base-100 shadow p-4">
@@ -197,6 +198,7 @@
 			localStorage.setItem("coords", coords.join(","));
 			updateCurrentCard(selectedCity, coords);
 			updateHourlyCard(coords);
+			updateDailyCard(selectedCity, coords);
 			document.getElementById("searchbar").value = '';
 			document.getElementById("suggestionsList").innerHTML = "";
 		}
@@ -204,6 +206,7 @@
 		window.addEventListener("DOMContentLoaded", () => {
 			updateCurrentCard(cityName, coords);
 			updateHourlyCard(coords);
+			updateDailyCard(cityName, coords);
 			if (localStorage.getItem("theme") === "true") {
 				document.querySelector(".theme-controller").checked = true;
 			}
