@@ -3,9 +3,11 @@ const monthNames = ["január", "február", "március", "április", "május", "j�
 
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
-const iconOfWMO = (WMO) => {
+const iconOfWMO = (WMO, hour=12) => {
     switch (WMO) {
-        case 0: return "☀️"; // Clear sky
+        case 0:
+            if (hour >= 5 && hour < 19) return "☀️"; // Clear sky
+            else return "🌙"; // Clear sky at night
         case 1: return "🌤️"; // Mainly clear
         case 2: return "🌥️"; // Partly cloudy
         case 3: return "☁️"; // Overcast
@@ -46,7 +48,7 @@ const updateCurrentCard = async (cityName, coords, tempUnit="celsius") => {
     document.getElementById("nowDate").textContent = `${date.getFullYear()}. ${monthNames[date.getMonth()]} ${date.getDate()}., ${dayNames[date.getUTCDay()]}`;
 
     const data = await OpenMeteo.get_current(...coords, tempUnit=tempUnit);
-    document.getElementById("nowIcon").textContent = iconOfWMO(data.current.weather_code);
+    document.getElementById("nowIcon").textContent = iconOfWMO(data.current.weather_code, date.getHours());
     document.getElementById("nowTemperature").textContent = data.current.temperature_2m.toString() + data.current_units.temperature_2m;
     document.getElementById("nowFeelTemperature").textContent = data.current.apparent_temperature.toString() + data.current_units.apparent_temperature;
     document.getElementById("nowWind").textContent = data.current.wind_speed_10m + " " + data.current_units.wind_speed_10m;
@@ -69,7 +71,7 @@ const updateHourlyCard = async (coords, tempUnit="celsius") => {
         card.id = "";
         card.classList.remove("hidden");
         card.querySelector(".hourly-time").textContent = `${date.getHours()}:00`;
-        card.querySelector(".hourly-icon").textContent = iconOfWMO(data[timestamp].weather_code);
+        card.querySelector(".hourly-icon").textContent = iconOfWMO(data[timestamp].weather_code, date.getHours());
         card.querySelector(".hourly-temp").textContent = data[timestamp].temperature_2m.toString() + "°"; //+ data[timestamp].unit_temperature_2m;
         card.querySelector(".hourly-feel").textContent = data[timestamp].apparent_temperature.toString() + "°"; //+ data[timestamp].unit_apparent_temperature;
         card.querySelector(".hourly-cloud").textContent = data[timestamp].cloud_cover + "%";
